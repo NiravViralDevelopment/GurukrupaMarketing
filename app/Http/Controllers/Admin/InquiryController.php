@@ -9,13 +9,55 @@ use Illuminate\Http\Request;
 
 class InquiryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $inquiries = Inquiry::with('project')
-            ->latest()
-            ->paginate(15);
+        $query = Inquiry::with('project');
 
-        return view('admin.inquiries.index', compact('inquiries'));
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhere('subject', 'like', "%{$search}%")
+                  ->orWhere('message', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by project
+        if ($request->filled('project_id')) {
+            $query->where('project_id', $request->project_id);
+        }
+
+        // Filter by date range
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        // Sort functionality
+        $sortBy = $request->get('sort_by', 'created_at');
+        $sortOrder = $request->get('sort_order', 'desc');
+        
+        if (in_array($sortBy, ['name', 'email', 'status', 'created_at'])) {
+            $query->orderBy($sortBy, $sortOrder);
+        } else {
+            $query->latest();
+        }
+
+        $inquiries = $query->paginate(15)->withQueryString();
+        $projects = Project::select('id', 'title')->get();
+
+        return view('admin.inquiries.index', compact('inquiries', 'projects'));
     }
 
     public function show(Inquiry $inquiry)
@@ -56,29 +98,4 @@ class InquiryController extends Controller
             ->with('success', 'Inquiry deleted successfully.');
     }
 
-    public function filter(Request $request)
-    {
-        $query = Inquiry::with('project');
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        if ($request->filled('project_id')) {
-            $query->where('project_id', $request->project_id);
-        }
-
-        if ($request->filled('date_from')) {
-            $query->whereDate('created_at', '>=', $request->date_from);
-        }
-
-        if ($request->filled('date_to')) {
-            $query->whereDate('created_at', '<=', $request->date_to);
-        }
-
-        $inquiries = $query->latest()->paginate(15);
-        $projects = Project::select('id', 'title')->get();
-
-        return view('admin.inquiries.index', compact('inquiries', 'projects'));
-    }
 }

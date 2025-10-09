@@ -3009,3 +3009,77 @@ Content-Transfer-Encoding: quoted-printable
 #50 C:\\wamp64\\www\\GurukrupaMarketing\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\wamp64\\\\www\\\\G...')
 #51 {main}
 "} 
+[2025-10-09 16:05:36] local.DEBUG: From: Example <hello@example.com>
+To: info@gurukrupa.com
+Subject: New Inquiry: wordpress & QA
+MIME-Version: 1.0
+Date: Thu, 09 Oct 2025 16:05:36 +0000
+Message-ID: <cb83232f8c163556cf01c5e7c1304e65@example.com>
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>New Inquiry Received</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #D4AF37; color: white; padding: 20px; text-align: center; }
+        .content { background: #f9f9f9; padding: 20px; }
+        .field { margin-bottom: 15px; }
+        .label { font-weight: bold; color: #555; }
+        .value { margin-top: 5px; }
+        .footer { background: #333; color: white; padding: 15px; text-align: center; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>New Inquiry Received</h1>
+        </div>
+        
+        <div class="content">
+            <p>A new inquiry has been submitted through the website contact form.</p>
+            
+            <div class="field">
+                <div class="label">Name:</div>
+                <div class="value">om</div>
+            </div>
+            
+            <div class="field">
+                <div class="label">Email:</div>
+                <div class="value">om@mailinator.com</div>
+            </div>
+            
+                        <div class="field">
+                <div class="label">Phone:</div>
+                <div class="value">74125896996</div>
+            </div>
+                        
+                        <div class="field">
+                <div class="label">Subject:</div>
+                <div class="value">wordpress &amp; QA</div>
+            </div>
+                        
+                        
+            <div class="field">
+                <div class="label">Message:</div>
+                <div class="value">123313</div>
+            </div>
+            
+            <div class="field">
+                <div class="label">Submitted:</div>
+                <div class="value">Oct 09, 2025 at 4:05 PM</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>This inquiry was submitted through the Gurukrupa Real Estate website.</p>
+        </div>
+    </div>
+</body>
+</html>
+  

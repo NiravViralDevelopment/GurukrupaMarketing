@@ -1,9 +1,9 @@
-@extends('layouts.app')
 
-@section('title', 'Contact Us - Gurukrupa Real Estate')
-@section('description', 'Get in touch with us for your real estate needs. We are here to help you find the perfect property.')
 
-@section('content')
+<?php $__env->startSection('title', 'Contact Us - Gurukrupa Real Estate'); ?>
+<?php $__env->startSection('description', 'Get in touch with us for your real estate needs. We are here to help you find the perfect property.'); ?>
+
+<?php $__env->startSection('content'); ?>
 <!-- Hero Section -->
 <section class="bg-gray-900 text-white py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -20,78 +20,135 @@
             <div>
                 <h2 class="text-3xl font-bold mb-6">Send us a Message</h2>
                 
-                @if(session('success'))
+                <?php if(session('success')): ?>
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-                    {{ session('success') }}
+                    <?php echo e(session('success')); ?>
+
                 </div>
-                @endif
+                <?php endif; ?>
                 
-                <form action="{{ route('contact.store') }}" method="POST" class="space-y-6">
-                    @csrf
+                <form action="<?php echo e(route('contact.store')); ?>" method="POST" class="space-y-6">
+                    <?php echo csrf_field(); ?>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Name *</label>
-                            <input type="text" id="name" name="name" value="{{ old('name') }}" required
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent @error('name') border-red-500 @enderror">
-                            @error('name')
-                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                            @enderror
+                            <input type="text" id="name" name="name" value="<?php echo e(old('name')); ?>" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-red-500 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>">
+                            <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <p class="text-red-500 text-sm mt-1"><?php echo e($message); ?></p>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                         
                         <div>
                             <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
-                            <input type="email" id="email" name="email" value="{{ old('email') }}" required
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent @error('email') border-red-500 @enderror">
-                            @error('email')
-                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                            @enderror
+                            <input type="email" id="email" name="email" value="<?php echo e(old('email')); ?>" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-red-500 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>">
+                            <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <p class="text-red-500 text-sm mt-1"><?php echo e($message); ?></p>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
-                            <input type="tel" id="phone" name="phone" value="{{ old('phone') }}"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent @error('phone') border-red-500 @enderror">
-                            @error('phone')
-                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                            @enderror
+                            <input type="tel" id="phone" name="phone" value="<?php echo e(old('phone')); ?>"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent <?php $__errorArgs = ['phone'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-red-500 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>">
+                            <?php $__errorArgs = ['phone'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <p class="text-red-500 text-sm mt-1"><?php echo e($message); ?></p>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                         
-                        {{-- <div>
-                            <label for="project_id" class="block text-sm font-semibold text-gray-700 mb-2">Interested Project</label>
-                            <select id="project_id" name="project_id"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent @error('project_id') border-red-500 @enderror">
-                                <option value="">Select a project (optional)</option>
-                                @foreach($projects as $project)
-                                <option value="{{ $project->id }}" {{ old('project_id') == $project->id ? 'selected' : '' }}>
-                                    {{ $project->title }}
-                                </option>
-                                @endforeach
-                            </select>
-                            @error('project_id')
-                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div> --}}
+                        
                     </div>
                     
                     <div>
                         <label for="subject" class="block text-sm font-semibold text-gray-700 mb-2">Subject</label>
-                        <input type="text" id="subject" name="subject" value="{{ old('subject') }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent @error('subject') border-red-500 @enderror">
-                        @error('subject')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
+                        <input type="text" id="subject" name="subject" value="<?php echo e(old('subject')); ?>"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent <?php $__errorArgs = ['subject'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-red-500 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>">
+                        <?php $__errorArgs = ['subject'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="text-red-500 text-sm mt-1"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
                     
                     <div>
                         <label for="message" class="block text-sm font-semibold text-gray-700 mb-2">Message *</label>
                         <textarea id="message" name="message" rows="5" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent @error('message') border-red-500 @enderror">{{ old('message') }}</textarea>
-                        @error('message')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent <?php $__errorArgs = ['message'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> border-red-500 <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"><?php echo e(old('message')); ?></textarea>
+                        <?php $__errorArgs = ['message'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="text-red-500 text-sm mt-1"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
                     
                     <button type="submit" class="w-full bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-yellow-600 transition duration-300">
@@ -114,7 +171,7 @@
                         </div>
                         <div>
                             <h3 class="text-lg font-semibold mb-2">Address</h3>
-                            <p class="text-gray-600">{{ $settings['contact_address'] ?? '123 Business District, Mumbai, Maharashtra 400001' }}</p>
+                            <p class="text-gray-600"><?php echo e($settings['contact_address'] ?? '123 Business District, Mumbai, Maharashtra 400001'); ?></p>
                         </div>
                     </div>
                     
@@ -126,7 +183,7 @@
                         </div>
                         <div>
                             <h3 class="text-lg font-semibold mb-2">Phone</h3>
-                            <p class="text-gray-600">{{ $settings['contact_phone'] ?? '+91 9876543210' }}</p>
+                            <p class="text-gray-600"><?php echo e($settings['contact_phone'] ?? '+91 9876543210'); ?></p>
                         </div>
                     </div>
                     
@@ -138,7 +195,7 @@
                         </div>
                         <div>
                             <h3 class="text-lg font-semibold mb-2">Email</h3>
-                            <p class="text-gray-600">{{ $settings['contact_email'] ?? 'info@gurukrupa.com' }}</p>
+                            <p class="text-gray-600"><?php echo e($settings['contact_email'] ?? 'info@gurukrupa.com'); ?></p>
                         </div>
                     </div>
                     
@@ -150,13 +207,13 @@
                         </div>
                         <div>
                             <h3 class="text-lg font-semibold mb-2">WhatsApp</h3>
-                            <p class="text-gray-600 mb-2">{{ $settings['contact_phone'] ?? '+91 9876543210' }}</p>
-                            @php
+                            <p class="text-gray-600 mb-2"><?php echo e($settings['contact_phone'] ?? '+91 9876543210'); ?></p>
+                            <?php
                                 $whatsappNumber = $settings['contact_phone'] ?? '919876543210';
                                 $whatsappNumber = preg_replace('/[^0-9]/', '', $whatsappNumber);
                                 $whatsappMessage = urlencode('Hi Gurukrupa Real Estate, I am interested in your properties. Please provide more information.');
-                            @endphp
-                            <a href="https://wa.me/{{ $whatsappNumber }}?text={{ $whatsappMessage }}" 
+                            ?>
+                            <a href="https://wa.me/<?php echo e($whatsappNumber); ?>?text=<?php echo e($whatsappMessage); ?>" 
                                target="_blank" 
                                class="inline-flex items-center bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300">
                                 <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -179,4 +236,6 @@
         </div>
     </div>
 </section>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH E:\Working\GurukrupaMarketing\resources\views/frontend/contact.blade.php ENDPATH**/ ?>
