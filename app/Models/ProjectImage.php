@@ -36,6 +36,6 @@ class ProjectImage extends Model
      */
     public function getImageUrlAttribute(): string
     {
-        return asset('storage/' . $this->image_path);
+        return asset($this->image_path);
     }
 }

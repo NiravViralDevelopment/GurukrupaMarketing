@@ -124,8 +124,19 @@ class ProjectController extends Controller
 
         // Handle image uploads
         if ($request->hasFile('images')) {
+            // Create projects directory in public folder if it doesn't exist
+            $publicPath = public_path('projects');
+            if (!file_exists($publicPath)) {
+                mkdir($publicPath, 0755, true);
+            }
+            
             foreach ($request->file('images') as $index => $image) {
-                $path = $image->store('projects', 'public');
+                // Generate unique filename
+                $filename = time() . '_' . $index . '.' . $image->getClientOriginalExtension();
+                $path = 'projects/' . $filename;
+                
+                // Move file to public/projects directory
+                $image->move($publicPath, $filename);
                 
                 ProjectImage::create([
                     'project_id' => $project->id,
@@ -197,8 +208,19 @@ class ProjectController extends Controller
 
         // Handle new image uploads
         if ($request->hasFile('images')) {
+            // Create projects directory in public folder if it doesn't exist
+            $publicPath = public_path('projects');
+            if (!file_exists($publicPath)) {
+                mkdir($publicPath, 0755, true);
+            }
+            
             foreach ($request->file('images') as $index => $image) {
-                $path = $image->store('projects', 'public');
+                // Generate unique filename
+                $filename = time() . '_' . $index . '.' . $image->getClientOriginalExtension();
+                $path = 'projects/' . $filename;
+                
+                // Move file to public/projects directory
+                $image->move($publicPath, $filename);
                 
                 ProjectImage::create([
                     'project_id' => $project->id,
@@ -218,7 +240,10 @@ class ProjectController extends Controller
     {
         // Delete associated images
         foreach ($project->images as $image) {
-            Storage::disk('public')->delete($image->image_path);
+            $imagePath = public_path($image->image_path);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
         }
         
         $project->delete();
@@ -229,7 +254,10 @@ class ProjectController extends Controller
 
     public function deleteImage(ProjectImage $image)
     {
-        Storage::disk('public')->delete($image->image_path);
+        $imagePath = public_path($image->image_path);
+        if (file_exists($imagePath)) {
+            unlink($imagePath);
+        }
         $image->delete();
 
         return response()->json(['success' => true]);

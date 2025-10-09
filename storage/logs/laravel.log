@@ -3083,3 +3083,77 @@ Content-Transfer-Encoding: quoted-printable
 </body>
 </html>
   
+[2025-10-09 17:14:28] local.DEBUG: From: Example <hello@example.com>
+To: info@gurukrupa.com
+Subject: New Inquiry: Rerum ea aut incidun
+MIME-Version: 1.0
+Date: Thu, 09 Oct 2025 17:14:28 +0000
+Message-ID: <9aba1cb7ad63ffff6dcac43cc352aa9b@example.com>
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>New Inquiry Received</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #D4AF37; color: white; padding: 20px; text-align: center; }
+        .content { background: #f9f9f9; padding: 20px; }
+        .field { margin-bottom: 15px; }
+        .label { font-weight: bold; color: #555; }
+        .value { margin-top: 5px; }
+        .footer { background: #333; color: white; padding: 15px; text-align: center; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>New Inquiry Received</h1>
+        </div>
+        
+        <div class="content">
+            <p>A new inquiry has been submitted through the website contact form.</p>
+            
+            <div class="field">
+                <div class="label">Name:</div>
+                <div class="value">Joelle Gross</div>
+            </div>
+            
+            <div class="field">
+                <div class="label">Email:</div>
+                <div class="value">rykixucox@mailinator.com</div>
+            </div>
+            
+                        <div class="field">
+                <div class="label">Phone:</div>
+                <div class="value">+1 (575) 713-8369</div>
+            </div>
+                        
+                        <div class="field">
+                <div class="label">Subject:</div>
+                <div class="value">Rerum ea aut incidun</div>
+            </div>
+                        
+                        
+            <div class="field">
+                <div class="label">Message:</div>
+                <div class="value">Exercitationem solut</div>
+            </div>
+            
+            <div class="field">
+                <div class="label">Submitted:</div>
+                <div class="value">Oct 09, 2025 at 5:14 PM</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>This inquiry was submitted through the Gurukrupa Real Estate website.</p>
+        </div>
+    </div>
+</body>
+</html>
+  
