@@ -13,11 +13,25 @@ class ProjectController extends Controller
 {
     public function index(Request $request)
     {
+        // Check if this is a DataTables AJAX request
+        if ($request->ajax()) {
+            return $this->getDataTablesData($request);
+        }
+
+        return view('admin.projects.index');
+    }
+
+    public function getDataTablesData(Request $request)
+    {
         $query = Project::with('images');
 
-        // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->search;
+        // DataTables server-side processing
+        $totalRecords = Project::count();
+        $filteredRecords = $totalRecords;
+
+        // DataTables search functionality
+        if ($request->filled('search') && $request->search['value']) {
+            $search = $request->search['value'];
             $query->where(function($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
                   ->orWhere('description', 'like', "%{$search}%")
@@ -25,54 +39,53 @@ class ProjectController extends Controller
                   ->orWhere('location', 'like', "%{$search}%")
                   ->orWhere('area', 'like', "%{$search}%");
             });
+            $filteredRecords = $query->count();
         }
 
-        // Filter by category
-        if ($request->filled('category')) {
-            $query->where('category', $request->category);
-        }
-
-        // Filter by status (active/inactive)
-        if ($request->filled('status')) {
-            $query->where('is_active', $request->status === 'active');
-        }
-
-        // Filter by featured
-        if ($request->filled('featured')) {
-            $query->where('is_featured', $request->featured === 'yes');
-        }
-
-        // Filter by price range
-        if ($request->filled('price_min')) {
-            $query->where('price', '>=', $request->price_min);
-        }
-
-        if ($request->filled('price_max')) {
-            $query->where('price', '<=', $request->price_max);
-        }
-
-        // Filter by date range
-        if ($request->filled('date_from')) {
-            $query->whereDate('created_at', '>=', $request->date_from);
-        }
-
-        if ($request->filled('date_to')) {
-            $query->whereDate('created_at', '<=', $request->date_to);
-        }
-
-        // Sort functionality
-        $sortBy = $request->get('sort_by', 'created_at');
-        $sortOrder = $request->get('sort_order', 'desc');
-        
-        if (in_array($sortBy, ['title', 'category', 'location', 'price', 'created_at'])) {
-            $query->orderBy($sortBy, $sortOrder);
+        // Ordering
+        if ($request->filled('order')) {
+            $orderColumn = $request->order[0]['column'];
+            $orderDirection = $request->order[0]['dir'];
+            
+            $columns = ['title', 'location', 'category', 'price', 'is_active', 'created_at'];
+            if (isset($columns[$orderColumn])) {
+                $query->orderBy($columns[$orderColumn], $orderDirection);
+            }
         } else {
             $query->latest();
         }
 
-        $projects = $query->paginate(10)->withQueryString();
+        // Pagination
+        $start = $request->start ?? 0;
+        $length = $request->length ?? 10;
+        $projects = $query->skip($start)->take($length)->get();
 
-        return view('admin.projects.index', compact('projects'));
+        $data = [];
+        foreach ($projects as $project) {
+            $data[] = [
+                'title' => $project->title,
+                'short_description' => Str::limit($project->short_description, 40),
+                'location' => $project->location,
+                'category' => $project->category,
+                'price' => $project->price,
+                'is_active' => $project->is_active,
+                'is_featured' => $project->is_featured,
+                'created_at' => $project->created_at->format('M d, Y'),
+                'image_url' => $project->images->count() > 0 ? $project->images->first()->image_url : null,
+                'actions' => [
+                    'view' => route('admin.projects.show', $project),
+                    'edit' => route('admin.projects.edit', $project),
+                    'delete' => route('admin.projects.destroy', $project)
+                ]
+            ];
+        }
+
+        return response()->json([
+            'draw' => intval($request->draw),
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $filteredRecords,
+            'data' => $data
+        ]);
     }
 
     public function create()

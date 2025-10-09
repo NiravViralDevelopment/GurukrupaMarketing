@@ -12,11 +12,25 @@ class BlogController extends Controller
 {
     public function index(Request $request)
     {
+        // Check if this is a DataTables AJAX request
+        if ($request->ajax()) {
+            return $this->getDataTablesData($request);
+        }
+
+        return view('admin.blogs.index');
+    }
+
+    public function getDataTablesData(Request $request)
+    {
         $query = Blog::query();
 
+        // DataTables server-side processing
+        $totalRecords = Blog::count();
+        $filteredRecords = $totalRecords;
+
         // Search functionality
-        if ($request->filled('search')) {
-            $search = $request->search;
+        if ($request->filled('search') && $request->search['value']) {
+            $search = $request->search['value'];
             $query->where(function($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
                   ->orWhere('content', 'like', "%{$search}%")
@@ -24,40 +38,50 @@ class BlogController extends Controller
                   ->orWhere('meta_title', 'like', "%{$search}%")
                   ->orWhere('meta_description', 'like', "%{$search}%");
             });
+            $filteredRecords = $query->count();
         }
 
-        // Filter by status
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        // Filter by featured
-        if ($request->filled('featured')) {
-            $query->where('is_featured', $request->featured === 'yes');
-        }
-
-        // Filter by date range
-        if ($request->filled('date_from')) {
-            $query->whereDate('created_at', '>=', $request->date_from);
-        }
-
-        if ($request->filled('date_to')) {
-            $query->whereDate('created_at', '<=', $request->date_to);
-        }
-
-        // Sort functionality
-        $sortBy = $request->get('sort_by', 'created_at');
-        $sortOrder = $request->get('sort_order', 'desc');
-        
-        if (in_array($sortBy, ['title', 'status', 'created_at', 'published_at'])) {
-            $query->orderBy($sortBy, $sortOrder);
+        // Ordering
+        if ($request->filled('order')) {
+            $orderColumn = $request->order[0]['column'];
+            $orderDirection = $request->order[0]['dir'];
+            
+            $columns = ['title', 'status', 'published_at', 'created_at'];
+            if (isset($columns[$orderColumn])) {
+                $query->orderBy($columns[$orderColumn], $orderDirection);
+            }
         } else {
             $query->latest();
         }
 
-        $blogs = $query->paginate(10)->withQueryString();
+        // Pagination
+        $start = $request->start ?? 0;
+        $length = $request->length ?? 10;
+        $blogs = $query->skip($start)->take($length)->get();
 
-        return view('admin.blogs.index', compact('blogs'));
+        $data = [];
+        foreach ($blogs as $blog) {
+            $data[] = [
+                'title' => $blog->title,
+                'excerpt' => Str::limit($blog->excerpt, 50),
+                'status' => $blog->status,
+                'is_featured' => $blog->is_featured,
+                'published_at' => $blog->published_at ? $blog->published_at->format('M d, Y') : 'Not published',
+                'created_at' => $blog->created_at->format('M d, Y'),
+                'actions' => [
+                    'view' => route('admin.blogs.show', $blog),
+                    'edit' => route('admin.blogs.edit', $blog),
+                    'delete' => route('admin.blogs.destroy', $blog)
+                ]
+            ];
+        }
+
+        return response()->json([
+            'draw' => intval($request->draw),
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $filteredRecords,
+            'data' => $data
+        ]);
     }
 
     public function create()
