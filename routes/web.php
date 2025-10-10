@@ -5,6 +5,7 @@ use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\ContactController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\ProjectController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InquiryController;
@@ -44,6 +45,15 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('blogs/{blog}/edit', [AdminBlogController::class, 'edit'])->name('admin.blogs.edit');
     Route::put('blogs/{blog}', [AdminBlogController::class, 'update'])->name('admin.blogs.update');
     Route::delete('blogs/{blog}', [AdminBlogController::class, 'destroy'])->name('admin.blogs.destroy');
+    
+    // Banners
+    Route::get('banners', [BannerController::class, 'index'])->name('admin.banners.index');
+    Route::get('banners/create', [BannerController::class, 'create'])->name('admin.banners.create');
+    Route::post('banners', [BannerController::class, 'store'])->name('admin.banners.store');
+    Route::get('banners/{banner}', [BannerController::class, 'show'])->name('admin.banners.show');
+    Route::get('banners/{banner}/edit', [BannerController::class, 'edit'])->name('admin.banners.edit');
+    Route::put('banners/{banner}', [BannerController::class, 'update'])->name('admin.banners.update');
+    Route::delete('banners/{banner}', [BannerController::class, 'destroy'])->name('admin.banners.destroy');
     
     // Inquiries
     Route::get('inquiries', [InquiryController::class, 'index'])->name('admin.inquiries.index');
