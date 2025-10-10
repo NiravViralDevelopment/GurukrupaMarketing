@@ -113,9 +113,10 @@ class ProjectController extends Controller
             'is_featured' => 'boolean',
             'is_active' => 'boolean',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'brochure' => 'nullable|file|mimes:pdf|max:10240', // 10MB max for PDF
         ]);
 
-        $project = Project::create([
+        $projectData = [
             'title' => $request->title,
             'slug' => Str::slug($request->title),
             'description' => $request->description,
@@ -133,7 +134,24 @@ class ProjectController extends Controller
             'meta_description' => $request->meta_description,
             'is_featured' => $request->boolean('is_featured'),
             'is_active' => $request->boolean('is_active'),
-        ]);
+        ];
+
+        // Handle brochure upload
+        if ($request->hasFile('brochure')) {
+            $brochureFile = $request->file('brochure');
+            $brochureFilename = time() . '_' . $brochureFile->getClientOriginalName();
+            $brochurePath = public_path('project/brochure');
+            
+            // Create directory if it doesn't exist
+            if (!file_exists($brochurePath)) {
+                mkdir($brochurePath, 0755, true);
+            }
+            
+            $brochureFile->move($brochurePath, $brochureFilename);
+            $projectData['brochure'] = $brochureFilename;
+        }
+
+        $project = Project::create($projectData);
 
         // Handle image uploads
         if ($request->hasFile('images')) {
@@ -197,9 +215,10 @@ class ProjectController extends Controller
             'is_featured' => 'boolean',
             'is_active' => 'boolean',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'brochure' => 'nullable|file|mimes:pdf|max:10240', // 10MB max for PDF
         ]);
 
-        $project->update([
+        $projectData = [
             'title' => $request->title,
             'slug' => Str::slug($request->title),
             'description' => $request->description,
@@ -217,7 +236,29 @@ class ProjectController extends Controller
             'meta_description' => $request->meta_description,
             'is_featured' => $request->boolean('is_featured'),
             'is_active' => $request->boolean('is_active'),
-        ]);
+        ];
+
+        // Handle brochure upload
+        if ($request->hasFile('brochure')) {
+            // Delete old brochure if exists
+            if ($project->brochure && file_exists(public_path('project/brochure/' . $project->brochure))) {
+                unlink(public_path('project/brochure/' . $project->brochure));
+            }
+            
+            $brochureFile = $request->file('brochure');
+            $brochureFilename = time() . '_' . $brochureFile->getClientOriginalName();
+            $brochurePath = public_path('project/brochure');
+            
+            // Create directory if it doesn't exist
+            if (!file_exists($brochurePath)) {
+                mkdir($brochurePath, 0755, true);
+            }
+            
+            $brochureFile->move($brochurePath, $brochureFilename);
+            $projectData['brochure'] = $brochureFilename;
+        }
+
+        $project->update($projectData);
 
         // Handle new image uploads
         if ($request->hasFile('images')) {
@@ -257,6 +298,11 @@ class ProjectController extends Controller
             if (file_exists($imagePath)) {
                 unlink($imagePath);
             }
+        }
+        
+        // Delete brochure file
+        if ($project->brochure && file_exists(public_path('project/brochure/' . $project->brochure))) {
+            unlink(public_path('project/brochure/' . $project->brochure));
         }
         
         $project->delete();

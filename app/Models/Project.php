@@ -29,6 +29,7 @@ class Project extends Model
         'meta_description',
         'is_featured',
         'is_active',
+        'brochure',
     ];
 
     protected $casts = [
@@ -116,5 +117,16 @@ class Project extends Model
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    /**
+     * Get the brochure URL.
+     */
+    public function getBrochureUrlAttribute(): ?string
+    {
+        if ($this->brochure && !empty($this->brochure)) {
+            return asset('project/brochure/' . $this->brochure);
+        }
+        return null;
     }
 }
