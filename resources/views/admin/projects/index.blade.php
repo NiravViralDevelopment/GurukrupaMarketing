@@ -16,13 +16,12 @@
         <table id="projectsTable" class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/3">Project</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Location</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Category</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Price</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Status</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Created</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">Actions</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Project</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -247,7 +246,9 @@ $(document).ready(function() {
                             categoryClass = 'bg-gray-100 text-gray-800';
                     }
                     
-                    return '<span class="px-2 py-1 text-xs font-medium rounded-full ' + categoryClass + '">' + categoryText + '</span>';
+                    return '<div class="flex justify-center">' +
+                        '<span class="px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap ' + categoryClass + '">' + categoryText + '</span>' +
+                    '</div>';
                 }
             },
             {
@@ -281,13 +282,6 @@ $(document).ready(function() {
                 }
             },
             {
-                data: 'created_at',
-                name: 'created_at',
-                render: function(data, type, row) {
-                    return '<span class="text-sm text-gray-900">' + data + '</span>';
-                }
-            },
-            {
                 data: 'actions',
                 name: 'actions',
                 orderable: false,
@@ -318,7 +312,7 @@ $(document).ready(function() {
                 }
             }
         ],
-        order: [[5, 'desc']], // Sort by created_at desc by default
+        order: [[0, 'asc']], // Sort by project name asc by default
         pageLength: 10,
         lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
         language: {
@@ -340,12 +334,11 @@ $(document).ready(function() {
         autoWidth: false,
         columnDefs: [
             { width: "35%", targets: 0 },
-            { width: "15%", targets: 1 },
-            { width: "12%", targets: 2 },
-            { width: "10%", targets: 3 },
-            { width: "12%", targets: 4 },
-            { width: "10%", targets: 5 },
-            { width: "6%", targets: 6 }
+            { width: "18%", targets: 1 },
+            { width: "15%", targets: 2 },
+            { width: "12%", targets: 3 },
+            { width: "15%", targets: 4 },
+            { width: "5%", targets: 5 }
         ]
     });
 });
