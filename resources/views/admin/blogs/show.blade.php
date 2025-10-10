@@ -1,5 +1,6 @@
 @extends('layouts.admin')
 
+
 @section('title', 'View Blog Post')
 @section('page-title', 'Blog Post Details')
 
