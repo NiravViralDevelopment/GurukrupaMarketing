@@ -11,8 +11,12 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo e(asset('css/app.css')); ?>">
     <script>
@@ -57,6 +61,13 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
                     </svg>
                     Blog Posts
+                </a>
+                
+                <a href="<?php echo e(route('admin.banners.index')); ?>" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white <?php echo e(request()->routeIs('admin.banners.*') ? 'bg-gray-800 text-white' : ''); ?>">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    Banners
                 </a>
                 
                 <a href="<?php echo e(route('admin.inquiries.index')); ?>" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800 hover:text-white <?php echo e(request()->routeIs('admin.inquiries.*') ? 'bg-gray-800 text-white' : ''); ?>">
@@ -113,6 +124,15 @@
             </main>
         </div>
     </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    
+    <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html>
 <?php /**PATH C:\wamp64\www\GurukrupaMarketing\resources\views/layouts/admin.blade.php ENDPATH**/ ?>

@@ -23,6 +23,7 @@ class Project extends Model
         'area',
         'price',
         'features',
+        'amenities',
         'map_lat',
         'map_lng',
         'meta_title',
@@ -34,6 +35,7 @@ class Project extends Model
 
     protected $casts = [
         'features' => 'array',
+        'amenities' => 'array',
         'start_date' => 'date',
         'end_date' => 'date',
         'price' => 'decimal:2',

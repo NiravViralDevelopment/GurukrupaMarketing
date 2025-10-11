@@ -10,7 +10,13 @@ class ProjectController extends Controller
 {
     public function index(Request $request)
     {
+        // Try to get active projects first, fallback to all projects if none are active
         $query = Project::active()->with('images');
+        
+        // If no active projects, get all projects
+        if ($query->count() == 0) {
+            $query = Project::with('images');
+        }
 
         // Filter by category
         if ($request->filled('category')) {
@@ -24,8 +30,8 @@ class ProjectController extends Controller
 
         $projects = $query->latest()->paginate(12);
 
-        $categories = Project::active()
-            ->selectRaw('category, COUNT(*) as count')
+        // Get categories from all projects (not just active ones)
+        $categories = Project::selectRaw('category, COUNT(*) as count')
             ->groupBy('category')
             ->get();
 
@@ -34,18 +40,22 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        if (!$project->is_active) {
-            abort(404);
-        }
-
         $project->load('images');
         
-        $relatedProjects = Project::active()
+        // Get related projects (try active first, fallback to all)
+        $relatedQuery = Project::active()
             ->where('id', '!=', $project->id)
             ->where('category', $project->category)
-            ->with('images')
-            ->limit(4)
-            ->get();
+            ->with('images');
+            
+        // If no active related projects, get all related projects
+        if ($relatedQuery->count() == 0) {
+            $relatedQuery = Project::where('id', '!=', $project->id)
+                ->where('category', $project->category)
+                ->with('images');
+        }
+        
+        $relatedProjects = $relatedQuery->limit(4)->get();
 
         return view('frontend.projects.show', compact('project', 'relatedProjects'));
     }

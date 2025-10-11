@@ -132,7 +132,7 @@
                             onclick="togglePassword()" 
                             class="absolute inset-y-0 right-0 pr-3 flex items-center"
                         >
-                            <svg id="eyeIcon" class="h-5 w-5 text-white/60 hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg id="eyeIcon" class="h-5 w-5 text-black/60 hover:text-black transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                             </svg>
@@ -148,23 +148,6 @@
                     @enderror
                 </div>
 
-                <!-- Remember Me -->
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input 
-                            id="remember" 
-                            name="remember" 
-                            type="checkbox" 
-                            class="h-4 w-4 text-primary bg-white/10 border-white/20 rounded focus:ring-primary focus:ring-2"
-                        >
-                        <label for="remember" class="ml-2 block text-sm text-white/90">
-                            Remember me
-                        </label>
-                    </div>
-                    <a href="#" class="text-sm text-white/80 hover:text-primary transition-colors">
-                        Forgot password?
-                    </a>
-                </div>
 
                 <!-- Submit Button -->
                 <button 
@@ -180,12 +163,6 @@
                 </button>
             </form>
 
-            <!-- Footer -->
-            <div class="mt-8 text-center">
-                <p class="text-white/60 text-xs">
-                    © {{ date('Y') }} Gurukrupa Real Estate. All rights reserved.
-                </p>
-            </div>
         </div>
     </div>
 

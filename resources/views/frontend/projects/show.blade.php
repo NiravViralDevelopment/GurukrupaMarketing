@@ -5,7 +5,8 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="relative h-96 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')">
+<section class="relative h-96 bg-cover bg-center" 
+         style="background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')">
     <div class="absolute inset-0 bg-black bg-opacity-50"></div>
     <div class="relative z-10 flex items-center justify-center h-full">
         <div class="text-center text-white px-4">
@@ -54,19 +55,41 @@
                 </div>
                 @endif
 
-                <!-- Project Images -->
-                @if($project->images->count() > 0)
+                <!-- Amenities -->
+                @if($project->amenities && count($project->amenities) > 0)
                 <div class="mb-8">
-                    <h3 class="text-2xl font-bold mb-4">Project Gallery</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        @foreach($project->images as $image)
-                        <div class="aspect-w-16 aspect-h-9">
-                            <img src="{{ $image->image_url }}" alt="{{ $image->alt_text }}" class="w-full h-64 object-cover rounded-lg">
+                    <h3 class="text-2xl font-bold mb-4">Amenities & Facilities</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        @foreach($project->amenities as $amenity)
+                        <div class="flex items-center bg-gray-50 p-3 rounded-lg">
+                            <svg class="w-5 h-5 text-primary mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="font-medium">{{ $amenity }}</span>
                         </div>
                         @endforeach
                     </div>
                 </div>
                 @endif
+
+                <!-- Project Gallery -->
+                <div class="mb-8">
+                    <h3 class="text-2xl font-bold mb-4">Project Gallery</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="aspect-w-16 aspect-h-9">
+                            <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="{{ $project->title }}" class="w-full h-64 object-cover rounded-lg">
+                        </div>
+                        <div class="aspect-w-16 aspect-h-9">
+                            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="{{ $project->title }}" class="w-full h-64 object-cover rounded-lg">
+                        </div>
+                        <div class="aspect-w-16 aspect-h-9">
+                            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="{{ $project->title }}" class="w-full h-64 object-cover rounded-lg">
+                        </div>
+                        <div class="aspect-w-16 aspect-h-9">
+                            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="{{ $project->title }}" class="w-full h-64 object-cover rounded-lg">
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Sidebar -->

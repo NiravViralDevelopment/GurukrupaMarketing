@@ -13,80 +13,12 @@ class ProjectController extends Controller
 {
     public function index(Request $request)
     {
-        // Check if this is a DataTables AJAX request
-        if ($request->ajax()) {
-            return $this->getDataTablesData($request);
-        }
-
-        return view('admin.projects.index');
+        // Get all projects with their images for client-side DataTables
+        $projects = Project::with('images')->get();
+        
+        return view('admin.projects.index', compact('projects'));
     }
 
-    public function getDataTablesData(Request $request)
-    {
-        $query = Project::with('images');
-
-        // DataTables server-side processing
-        $totalRecords = Project::count();
-        $filteredRecords = $totalRecords;
-
-        // DataTables search functionality
-        if ($request->filled('search') && $request->search['value']) {
-            $search = $request->search['value'];
-            $query->where(function($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%")
-                  ->orWhere('short_description', 'like', "%{$search}%")
-                  ->orWhere('location', 'like', "%{$search}%")
-                  ->orWhere('area', 'like', "%{$search}%");
-            });
-            $filteredRecords = $query->count();
-        }
-
-        // Ordering
-        if ($request->filled('order')) {
-            $orderColumn = $request->order[0]['column'];
-            $orderDirection = $request->order[0]['dir'];
-            
-            $columns = ['title', 'location', 'category', 'price', 'is_active', 'created_at'];
-            if (isset($columns[$orderColumn])) {
-                $query->orderBy($columns[$orderColumn], $orderDirection);
-            }
-        } else {
-            $query->latest();
-        }
-
-        // Pagination
-        $start = $request->start ?? 0;
-        $length = $request->length ?? 10;
-        $projects = $query->skip($start)->take($length)->get();
-
-        $data = [];
-        foreach ($projects as $project) {
-            $data[] = [
-                'title' => $project->title,
-                'short_description' => Str::limit($project->short_description, 40),
-                'location' => $project->location,
-                'category' => $project->category,
-                'price' => $project->price,
-                'is_active' => $project->is_active,
-                'is_featured' => $project->is_featured,
-                'created_at' => $project->created_at->format('M d, Y'),
-                'image_url' => $project->images->count() > 0 ? $project->images->first()->image_url : null,
-                'actions' => [
-                    'view' => route('admin.projects.show', $project),
-                    'edit' => route('admin.projects.edit', $project),
-                    'delete' => route('admin.projects.destroy', $project)
-                ]
-            ];
-        }
-
-        return response()->json([
-            'draw' => intval($request->draw),
-            'recordsTotal' => $totalRecords,
-            'recordsFiltered' => $filteredRecords,
-            'data' => $data
-        ]);
-    }
 
     public function create()
     {
@@ -106,6 +38,7 @@ class ProjectController extends Controller
             'area' => 'nullable|string|max:100',
             'price' => 'nullable|numeric|min:0',
             'features' => 'nullable|array',
+            'amenities' => 'nullable|array',
             'map_lat' => 'nullable|numeric',
             'map_lng' => 'nullable|numeric',
             'meta_title' => 'nullable|string|max:255',
@@ -128,6 +61,7 @@ class ProjectController extends Controller
             'area' => $request->area,
             'price' => $request->price,
             'features' => $request->features,
+            'amenities' => $request->amenities,
             'map_lat' => $request->map_lat,
             'map_lng' => $request->map_lng,
             'meta_title' => $request->meta_title,
@@ -208,6 +142,7 @@ class ProjectController extends Controller
             'area' => 'nullable|string|max:100',
             'price' => 'nullable|numeric|min:0',
             'features' => 'nullable|array',
+            'amenities' => 'nullable|array',
             'map_lat' => 'nullable|numeric',
             'map_lng' => 'nullable|numeric',
             'meta_title' => 'nullable|string|max:255',
@@ -230,6 +165,7 @@ class ProjectController extends Controller
             'area' => $request->area,
             'price' => $request->price,
             'features' => $request->features,
+            'amenities' => $request->amenities,
             'map_lat' => $request->map_lat,
             'map_lng' => $request->map_lng,
             'meta_title' => $request->meta_title,
