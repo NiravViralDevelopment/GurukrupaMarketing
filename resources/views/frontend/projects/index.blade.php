@@ -69,13 +69,10 @@
             @foreach($projects as $project)
             <div class="group bg-white rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3">
                 @php
-                    // Use fallback images based on project category for reliable display
-                    $fallbackImages = [
-                        'new_launch' => 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                        'ongoing' => 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                        'completed' => 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-                    ];
-                    $projectImage = $fallbackImages[$project->category] ?? $fallbackImages['new_launch'];
+                    // Get the primary image or first image for the project
+                    $projectImage = $project->primaryImage() ? $project->primaryImage()->image_url : 
+                                   ($project->images->first() ? $project->images->first()->image_url : 
+                                   'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
                 @endphp
                 <div class="aspect-[4/3] bg-cover bg-center relative overflow-hidden" 
                      style="background-image: url('{{ $projectImage }}')">

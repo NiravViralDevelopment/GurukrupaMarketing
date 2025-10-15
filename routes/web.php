@@ -23,6 +23,20 @@ Route::get('/blogs/{blog}', [BlogController::class, 'show'])->name('blogs.show')
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
+// Test route to verify dynamic project functionality
+Route::get('/test-project', function() {
+    $project = \App\Models\Project::with('images')->first();
+    if ($project) {
+        return response()->json([
+            'project' => $project->toArray(),
+            'images_count' => $project->images->count(),
+            'primary_image' => $project->primaryImage() ? $project->primaryImage()->image_url : 'No primary image',
+            'first_image' => $project->images->first() ? $project->images->first()->image_url : 'No images'
+        ]);
+    }
+    return response()->json(['message' => 'No projects found']);
+})->name('test.project');
+
 // Admin Routes
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');

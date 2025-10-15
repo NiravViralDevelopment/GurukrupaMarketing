@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             SettingSeeder::class,
-            ProjectSeeder::class,
+            DynamicProjectSeeder::class, // This will create one project with actual images
             BlogSeeder::class,
             TeamSeeder::class,
         ]);

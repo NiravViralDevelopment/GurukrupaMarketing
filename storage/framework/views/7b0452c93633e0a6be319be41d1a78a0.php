@@ -1,28 +1,28 @@
-@extends('layouts.app')
 
-@section('title', 'Home - Gurukrupa Real Estate')
-@section('description', 'Leading real estate developer specializing in premium residential and commercial projects.')
 
-@section('content')
+<?php $__env->startSection('title', 'Home - Gurukrupa Real Estate'); ?>
+<?php $__env->startSection('description', 'Leading real estate developer specializing in premium residential and commercial projects.'); ?>
+
+<?php $__env->startSection('content'); ?>
 <!-- Hero Section with Project Showcase -->
 <section class="relative h-screen overflow-hidden">
     <!-- Background Image Carousel -->
     <div class="absolute inset-0">
-        @php
+        <?php
             // Always use fallback images for now to ensure they display
             $heroImages = [
                 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
                 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
                 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'
             ];
-        @endphp
+        ?>
         
-        @foreach($heroImages as $index => $imageUrl)
-        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 {{ $index === 0 ? 'opacity-100' : 'opacity-0' }}" 
-             style="background-image: url('{{ $imageUrl }}')" 
-             id="hero-slide-{{ $index }}">
+        <?php $__currentLoopData = $heroImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $imageUrl): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 <?php echo e($index === 0 ? 'opacity-100' : 'opacity-0'); ?>" 
+             style="background-image: url('<?php echo e($imageUrl); ?>')" 
+             id="hero-slide-<?php echo e($index); ?>">
         </div>
-        @endforeach
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         
         <div class="absolute inset-0 bg-black bg-opacity-40"></div>
     </div>
@@ -44,7 +44,7 @@
                 Experience luxury, innovation, and quality in every project.
             </p>
             <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                <a href="{{ route('projects.index') }}" 
+                <a href="<?php echo e(route('projects.index')); ?>" 
                    class="group bg-primary text-white px-10 py-4 rounded-2xl text-lg font-semibold hover:bg-yellow-600 transition-all duration-300 shadow-2xl hover:shadow-primary/25 transform hover:-translate-y-1">
                     <span class="flex items-center">
                         Explore Projects
@@ -53,7 +53,7 @@
                         </svg>
                     </span>
                 </a>
-                <a href="{{ route('contact') }}" 
+                <a href="<?php echo e(route('contact')); ?>" 
                    class="group border-2 border-white/30 backdrop-blur-sm text-white px-10 py-4 rounded-2xl text-lg font-semibold hover:bg-white hover:text-gray-900 transition-all duration-300">
                     <span class="flex items-center">
                         Get Quote
@@ -134,34 +134,37 @@
         </div>
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-            @if($featuredProjects->count() > 0)
-                @foreach($featuredProjects->take(2) as $index => $project)
+            <?php if($featuredProjects->count() > 0): ?>
+                <?php $__currentLoopData = $featuredProjects->take(2); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $project): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <div class="group relative overflow-hidden rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-700 transform hover:-translate-y-2">
-                @php
+                <?php
                     // Get the primary image or first image for the project
                     $projectImage = $project->primaryImage() ? $project->primaryImage()->image_url : 
                                    ($project->images->first() ? $project->images->first()->image_url : 
                                    'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
-                @endphp
+                ?>
                 <div class="aspect-[4/3] bg-cover bg-center transition-transform duration-700 group-hover:scale-110" 
-                     style="background-image: url('{{ $projectImage }}')">
+                     style="background-image: url('<?php echo e($projectImage); ?>')">
                     <!-- Overlay -->
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                     
                     <!-- Category Badge -->
                     <div class="absolute top-6 left-6">
                         <span class="bg-primary text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
-                            {{ ucfirst(str_replace('_', ' ', $project->category)) }}
+                            <?php echo e(ucfirst(str_replace('_', ' ', $project->category))); ?>
+
                         </span>
                     </div>
                     
                     <!-- Content -->
                     <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
                         <h3 class="text-3xl font-bold mb-3 group-hover:text-primary transition-colors duration-300">
-                            {{ $project->title }}
+                            <?php echo e($project->title); ?>
+
                         </h3>
                         <p class="text-white/90 mb-4 text-lg leading-relaxed">
-                            {{ Str::limit($project->short_description, 120) }}
+                            <?php echo e(Str::limit($project->short_description, 120)); ?>
+
                         </p>
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-2">
@@ -169,9 +172,9 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 </svg>
-                                <span class="font-semibold">{{ $project->location }}</span>
+                                <span class="font-semibold"><?php echo e($project->location); ?></span>
                             </div>
-                            <a href="{{ route('projects.show', $project) }}" 
+                            <a href="<?php echo e(route('projects.show', $project)); ?>" 
                                class="group/btn bg-white text-gray-900 px-6 py-3 rounded-full font-semibold hover:bg-primary hover:text-white transition-all duration-300 transform hover:scale-105 shadow-lg">
                                 <span class="flex items-center">
                                     View Details
@@ -184,8 +187,8 @@
                     </div>
                 </div>
             </div>
-                @endforeach
-            @else
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php else: ?>
                 <!-- Demo Projects when no real projects exist -->
                 <div class="group relative overflow-hidden rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-700 transform hover:-translate-y-2">
                     <div class="aspect-[4/3] bg-cover bg-center transition-transform duration-700 group-hover:scale-110" 
@@ -211,7 +214,7 @@
                                     </svg>
                                     <span class="font-semibold">Mumbai, Maharashtra</span>
                                 </div>
-                                <a href="{{ route('contact') }}" 
+                                <a href="<?php echo e(route('contact')); ?>" 
                                    class="group/btn bg-white text-gray-900 px-6 py-3 rounded-full font-semibold hover:bg-primary hover:text-white transition-all duration-300 transform hover:scale-105 shadow-lg">
                                     <span class="flex items-center">
                                         Get Details
@@ -249,7 +252,7 @@
                                     </svg>
                                     <span class="font-semibold">Delhi, NCR</span>
                                 </div>
-                                <a href="{{ route('contact') }}" 
+                                <a href="<?php echo e(route('contact')); ?>" 
                                    class="group/btn bg-white text-gray-900 px-6 py-3 rounded-full font-semibold hover:bg-primary hover:text-white transition-all duration-300 transform hover:scale-105 shadow-lg">
                                     <span class="flex items-center">
                                         Get Details
@@ -262,35 +265,38 @@
                         </div>
                     </div>
                 </div>
-            @endif
+            <?php endif; ?>
         </div>
         
         <!-- Additional Projects Grid -->
-        @if($featuredProjects->count() > 2)
+        <?php if($featuredProjects->count() > 2): ?>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            @foreach($featuredProjects->skip(2)->take(3) as $project)
+            <?php $__currentLoopData = $featuredProjects->skip(2)->take(3); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $project): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <div class="group bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3">
-                @php
+                <?php
                     // Get the primary image or first image for the project
                     $projectImage = $project->primaryImage() ? $project->primaryImage()->image_url : 
                                    ($project->images->first() ? $project->images->first()->image_url : 
                                    'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');
-                @endphp
+                ?>
                 <div class="aspect-[4/3] bg-cover bg-center transition-transform duration-500 group-hover:scale-110" 
-                     style="background-image: url('{{ $projectImage }}')">
+                     style="background-image: url('<?php echo e($projectImage); ?>')">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                     <div class="absolute top-4 left-4">
                         <span class="bg-primary text-white px-3 py-1 rounded-full text-xs font-semibold">
-                        {{ ucfirst(str_replace('_', ' ', $project->category)) }}
+                        <?php echo e(ucfirst(str_replace('_', ' ', $project->category))); ?>
+
                         </span>
                     </div>
                 </div>
                 <div class="p-6">
                     <h3 class="text-xl font-bold mb-3 text-gray-900 group-hover:text-primary transition-colors duration-300">
-                        {{ $project->title }}
+                        <?php echo e($project->title); ?>
+
                     </h3>
                     <p class="text-gray-600 mb-4 leading-relaxed">
-                        {{ Str::limit($project->short_description, 100) }}
+                        <?php echo e(Str::limit($project->short_description, 100)); ?>
+
                     </p>
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-2 text-gray-500">
@@ -298,9 +304,9 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
-                            <span class="text-sm font-medium">{{ $project->location }}</span>
+                            <span class="text-sm font-medium"><?php echo e($project->location); ?></span>
                         </div>
-                        <a href="{{ route('projects.show', $project) }}" 
+                        <a href="<?php echo e(route('projects.show', $project)); ?>" 
                            class="text-primary hover:text-yellow-600 font-semibold transition-colors duration-300 flex items-center">
                             View Details
                             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -310,12 +316,12 @@
                     </div>
                 </div>
             </div>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
-        @endif
+        <?php endif; ?>
         
         <div class="text-center">
-            <a href="{{ route('projects.index') }}" 
+            <a href="<?php echo e(route('projects.index')); ?>" 
                class="group inline-flex items-center bg-primary text-white px-10 py-4 rounded-2xl text-lg font-semibold hover:bg-yellow-600 transition-all duration-300 shadow-2xl hover:shadow-primary/25 transform hover:-translate-y-1">
                 <span>View All Projects</span>
                 <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -343,7 +349,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                         </svg>
                     </div>
-                    <div class="text-5xl md:text-6xl font-bold mb-3 counter" data-target="{{ $stats['total_projects'] }}">0</div>
+                    <div class="text-5xl md:text-6xl font-bold mb-3 counter" data-target="<?php echo e($stats['total_projects']); ?>">0</div>
                     <div class="text-xl font-semibold">Projects Completed</div>
                 </div>
             </div>
@@ -355,7 +361,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                         </svg>
                     </div>
-                    <div class="text-5xl md:text-6xl font-bold mb-3 counter" data-target="{{ $stats['completed_projects'] }}">0</div>
+                    <div class="text-5xl md:text-6xl font-bold mb-3 counter" data-target="<?php echo e($stats['completed_projects']); ?>">0</div>
                     <div class="text-xl font-semibold">Happy Customers</div>
                 </div>
             </div>
@@ -367,7 +373,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
             </div>
-                    <div class="text-5xl md:text-6xl font-bold mb-3 counter" data-target="{{ $stats['ongoing_projects'] }}">0</div>
+                    <div class="text-5xl md:text-6xl font-bold mb-3 counter" data-target="<?php echo e($stats['ongoing_projects']); ?>">0</div>
                     <div class="text-xl font-semibold">Ongoing Projects</div>
             </div>
             </div>
@@ -388,21 +394,21 @@
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            @foreach($latestBlogs as $blog)
+            <?php $__currentLoopData = $latestBlogs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $blog): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <article class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
                 <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80')"></div>
                 <div class="p-6">
-                    <div class="text-sm text-gray-500 mb-2">{{ $blog->published_at->format('M d, Y') }}</div>
-                    <h3 class="text-xl font-semibold mb-2">{{ $blog->title }}</h3>
-                    <p class="text-gray-600 mb-4">{{ Str::limit($blog->excerpt, 100) }}</p>
-                    <a href="{{ route('blogs.show', $blog) }}" class="text-primary hover:text-yellow-600 transition duration-300">Read More →</a>
+                    <div class="text-sm text-gray-500 mb-2"><?php echo e($blog->published_at->format('M d, Y')); ?></div>
+                    <h3 class="text-xl font-semibold mb-2"><?php echo e($blog->title); ?></h3>
+                    <p class="text-gray-600 mb-4"><?php echo e(Str::limit($blog->excerpt, 100)); ?></p>
+                    <a href="<?php echo e(route('blogs.show', $blog)); ?>" class="text-primary hover:text-yellow-600 transition duration-300">Read More →</a>
                 </div>
             </article>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
         
         <div class="text-center mt-12">
-            <a href="{{ route('blogs.index') }}" class="bg-primary text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-yellow-600 transition duration-300">View All News</a>
+            <a href="<?php echo e(route('blogs.index')); ?>" class="bg-primary text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-yellow-600 transition duration-300">View All News</a>
         </div>
     </div>
 </section>
@@ -417,7 +423,7 @@
                 Get in touch with us today and let's discuss how we can bring your vision to life with our expertise and commitment to excellence.
             </p>
             <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                <a href="{{ route('contact') }}" 
+                <a href="<?php echo e(route('contact')); ?>" 
                    class="group bg-primary text-white px-10 py-4 rounded-2xl text-lg font-semibold hover:bg-yellow-600 transition-all duration-300 shadow-2xl hover:shadow-primary/25 transform hover:-translate-y-1">
                     <span class="flex items-center">
                         Contact Us Today
@@ -426,7 +432,7 @@
                         </svg>
                     </span>
                 </a>
-                <a href="{{ route('projects.index') }}" 
+                <a href="<?php echo e(route('projects.index')); ?>" 
                    class="group border-2 border-white/30 backdrop-blur-sm text-white px-10 py-4 rounded-2xl text-lg font-semibold hover:bg-white hover:text-gray-900 transition-all duration-300">
                     <span class="flex items-center">
                         View Our Work
@@ -445,7 +451,7 @@
     <div class="absolute bottom-0 left-0 w-32 h-32 bg-primary/10 rounded-full translate-y-16 -translate-x-16"></div>
 </section>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Hero Image Carousel
@@ -529,5 +535,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endpush
-@endsection
+<?php $__env->stopPush(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH E:\Working\GurukrupaMarketing\resources\views/frontend/home.blade.php ENDPATH**/ ?>
