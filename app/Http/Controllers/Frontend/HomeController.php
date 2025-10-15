@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Banner;
 use App\Models\Blog;
 use App\Models\Project;
 use App\Models\Setting;
@@ -12,6 +13,9 @@ class HomeController extends Controller
 {
     public function index()
     {
+        // Get banners for hero section
+        $banners = Banner::latest()->get();
+        
         // Get featured projects, fallback to any active projects if no featured ones
         $featuredProjects = Project::active()
             ->featured()
@@ -80,6 +84,6 @@ class HomeController extends Controller
             ];
         }
 
-        return view('frontend.home', compact('featuredProjects', 'recentProjects', 'latestBlogs', 'stats'));
+        return view('frontend.home', compact('banners', 'featuredProjects', 'recentProjects', 'latestBlogs', 'stats'));
     }
 }
