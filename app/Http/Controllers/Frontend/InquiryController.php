@@ -72,8 +72,15 @@ class InquiryController extends Controller
         ]);
     }
 
-    public function downloadBrochureFile(Project $project)
+    public function downloadBrochureFile($projectId)
     {
+        // Find project by ID
+        $project = Project::find($projectId);
+        
+        if (!$project) {
+            abort(404, 'Project not found.');
+        }
+
         // Check if project has a brochure
         if (!$project->brochure || empty($project->brochure)) {
             abort(404, 'Brochure not available for this project.');
@@ -84,7 +91,7 @@ class InquiryController extends Controller
         
         // Check if file exists
         if (!file_exists($brochurePath)) {
-            abort(404, 'Brochure file not found.');
+            abort(404, 'Brochure file not found at: ' . $brochurePath);
         }
 
         // Return file download

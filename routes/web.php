@@ -26,7 +26,7 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 
 // Brochure download routes
 Route::post('/brochure/download', [InquiryController::class, 'downloadBrochure'])->name('brochure.request');
-Route::get('/brochure/{project}/download', [InquiryController::class, 'downloadBrochureFile'])->name('brochure.download');
+Route::get('/brochure/{projectId}/download', [InquiryController::class, 'downloadBrochureFile'])->name('brochure.download');
 
 // Test route to verify dynamic project functionality
 Route::get('/test-project', function() {
@@ -65,6 +65,25 @@ Route::post('/test-brochure-upload', function(\Illuminate\Http\Request $request)
     return response()->json([
         'success' => false,
         'message' => 'No brochure file received'
+    ]);
+});
+
+// Test route to check project brochure
+Route::get('/test-project-brochure/{id}', function($id) {
+    $project = \App\Models\Project::find($id);
+    if (!$project) {
+        return response()->json(['error' => 'Project not found']);
+    }
+    
+    $brochurePath = public_path('project/brochure/' . $project->brochure);
+    
+    return response()->json([
+        'project_id' => $project->id,
+        'project_title' => $project->title,
+        'brochure_field' => $project->brochure,
+        'brochure_path' => $brochurePath,
+        'file_exists' => file_exists($brochurePath),
+        'download_url' => route('brochure.download', $project->id)
     ]);
 });
 

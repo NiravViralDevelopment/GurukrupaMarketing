@@ -158,6 +158,8 @@
             menu.classList.toggle('hidden');
         }
     </script>
+    
+    <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html>
 <?php /**PATH E:\Working\GurukrupaMarketing\resources\views/layouts/app.blade.php ENDPATH**/ ?>

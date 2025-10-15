@@ -152,7 +152,7 @@
                             Get Quote
                         </a>
                         
-                        <button onclick="openBrochureModal()" class="w-full bg-gray-800 text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-700 transition duration-300 text-center flex items-center justify-center">
+                        <button id="downloadBrochureBtn" class="w-full bg-gray-800 text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-700 transition duration-300 text-center flex items-center justify-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
@@ -280,111 +280,166 @@
 
 <?php $__env->startPush('scripts'); ?>
 <script>
-// Image Modal Functions
-function openImageModal(imageSrc, imageAlt) {
-    document.getElementById('modalImage').src = imageSrc;
-    document.getElementById('modalCaption').textContent = imageAlt;
-    document.getElementById('imageModal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeImageModal() {
-    document.getElementById('imageModal').classList.add('hidden');
-    document.body.style.overflow = 'auto';
-}
-
-// Brochure Modal Functions
+// Simple, bulletproof brochure modal implementation
 function openBrochureModal() {
-    document.getElementById('brochureModal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-    // Reset form
-    document.getElementById('brochureForm').reset();
-    document.getElementById('successMessage').classList.add('hidden');
-    document.getElementById('brochureForm').classList.remove('hidden');
+    console.log('Opening brochure modal');
+    const modal = document.getElementById('brochureModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        
+        // Reset form
+        const form = document.getElementById('brochureForm');
+        const successMsg = document.getElementById('successMessage');
+        if (form) {
+            form.reset();
+            form.style.display = 'block';
+        }
+        if (successMsg) {
+            successMsg.style.display = 'none';
+        }
+    } else {
+        console.error('Brochure modal not found');
+    }
 }
 
 function closeBrochureModal() {
-    document.getElementById('brochureModal').classList.add('hidden');
-    document.body.style.overflow = 'auto';
+    console.log('Closing brochure modal');
+    const modal = document.getElementById('brochureModal');
+    if (modal) {
+        modal.style.display = 'none';
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
 }
 
-// Close modals when clicking outside
-document.getElementById('imageModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeImageModal();
+function openImageModal(imageSrc, imageAlt) {
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalCaption = document.getElementById('modalCaption');
+    if (modal && modalImage && modalCaption) {
+        modalImage.src = imageSrc;
+        modalCaption.textContent = imageAlt;
+        modal.style.display = 'flex';
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
     }
-});
+}
 
-document.getElementById('brochureModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeBrochureModal();
+function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    if (modal) {
+        modal.style.display = 'none';
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
     }
-});
+}
 
-// Close modals with Escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeImageModal();
-        closeBrochureModal();
+// Wait for page to load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Page loaded, setting up brochure modal');
+    
+    // Get elements
+    const downloadBtn = document.getElementById('downloadBrochureBtn');
+    const brochureModal = document.getElementById('brochureModal');
+    const brochureForm = document.getElementById('brochureForm');
+    const imageModal = document.getElementById('imageModal');
+    
+    // Set up download button
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Download brochure button clicked');
+            openBrochureModal();
+        });
+        console.log('Download button event listener added');
+    } else {
+        console.error('Download button not found');
     }
-});
-
-// Brochure form submission
-document.getElementById('brochureForm').addEventListener('submit', function(e) {
-    e.preventDefault();
     
-    const submitBtn = document.getElementById('submitBtn');
-    const submitText = document.getElementById('submitText');
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    const form = this;
-    
-    // Show loading state
-    submitBtn.disabled = true;
-    submitText.textContent = 'Processing...';
-    loadingSpinner.classList.remove('hidden');
-    
-    // Get form data
-    const formData = new FormData(form);
-    
-    // Submit form via AJAX
-    fetch('<?php echo e(route("brochure.request")); ?>', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Show success message
-            document.getElementById('brochureForm').classList.add('hidden');
-            document.getElementById('successMessage').classList.remove('hidden');
-            
-            // Download brochure if available
-            if (data.download_url) {
-                window.open(data.download_url, '_blank');
+    // Set up modal close on outside click
+    if (brochureModal) {
+        brochureModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBrochureModal();
             }
-        } else {
-            // Show error message
-            alert(data.message || 'An error occurred. Please try again.');
+        });
+    }
+    
+    if (imageModal) {
+        imageModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImageModal();
+            }
+        });
+    }
+    
+    // Set up form submission
+    if (brochureForm) {
+        brochureForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Form submitted');
             
-            // Reset button state
-            submitBtn.disabled = false;
-            submitText.textContent = 'Download Brochure';
-            loadingSpinner.classList.add('hidden');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred. Please try again.');
-        
-        // Reset button state
-        submitBtn.disabled = false;
-        submitText.textContent = 'Download Brochure';
-        loadingSpinner.classList.add('hidden');
-    });
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            
+            // Show loading state
+            if (submitBtn) submitBtn.disabled = true;
+            if (submitText) submitText.textContent = 'Processing...';
+            if (loadingSpinner) loadingSpinner.style.display = 'inline';
+            
+            // Get form data
+            const formData = new FormData(this);
+            
+            // Submit form
+            fetch('<?php echo e(route("brochure.request")); ?>', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Response received:', data);
+                if (data.success) {
+                    // Show success message
+                    const form = document.getElementById('brochureForm');
+                    const successMsg = document.getElementById('successMessage');
+                    if (form) form.style.display = 'none';
+                    if (successMsg) successMsg.style.display = 'block';
+                    
+                    // Download brochure if available
+                    if (data.download_url) {
+                        window.open(data.download_url, '_blank');
+                    }
+                } else {
+                    alert(data.message || 'An error occurred. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            })
+            .finally(() => {
+                // Reset button state
+                if (submitBtn) submitBtn.disabled = false;
+                if (submitText) submitText.textContent = 'Download Brochure';
+                if (loadingSpinner) loadingSpinner.style.display = 'none';
+            });
+        });
+    }
+    
+    // Make functions globally available
+    window.openBrochureModal = openBrochureModal;
+    window.closeBrochureModal = closeBrochureModal;
+    window.openImageModal = openImageModal;
+    window.closeImageModal = closeImageModal;
+    
+    console.log('Brochure modal setup complete');
 });
 </script>
 <?php $__env->stopPush(); ?>
