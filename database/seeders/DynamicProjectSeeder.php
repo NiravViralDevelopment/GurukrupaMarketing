@@ -49,6 +49,7 @@ class DynamicProjectSeeder extends Seeder
             ],
             'is_featured' => true,
             'is_active' => true,
+            'brochure' => 'sample_brochure.pdf', // Sample brochure file
             'meta_title' => 'Luxury Heights Apartments - Premium Residential Complex in Mumbai',
             'meta_description' => 'Discover luxury living in our premium residential complex with world-class amenities and modern design in Mumbai.'
         ]);

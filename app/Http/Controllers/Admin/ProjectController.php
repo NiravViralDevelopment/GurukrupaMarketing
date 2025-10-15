@@ -27,6 +27,7 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
+
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -68,6 +69,7 @@ class ProjectController extends Controller
             'meta_description' => $request->meta_description,
             'is_featured' => $request->boolean('is_featured'),
             'is_active' => $request->boolean('is_active'),
+            'brochure' => null, // Initialize brochure as null
         ];
 
         // Handle brochure upload
@@ -81,8 +83,10 @@ class ProjectController extends Controller
                 mkdir($brochurePath, 0755, true);
             }
             
+            // Move file to brochure directory
             $brochureFile->move($brochurePath, $brochureFilename);
             $projectData['brochure'] = $brochureFilename;
+            
         }
 
         $project = Project::create($projectData);
@@ -131,6 +135,7 @@ class ProjectController extends Controller
 
     public function update(Request $request, Project $project)
     {
+
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -172,6 +177,7 @@ class ProjectController extends Controller
             'meta_description' => $request->meta_description,
             'is_featured' => $request->boolean('is_featured'),
             'is_active' => $request->boolean('is_active'),
+            'brochure' => $project->brochure, // Keep existing brochure if no new one uploaded
         ];
 
         // Handle brochure upload
@@ -190,6 +196,7 @@ class ProjectController extends Controller
                 mkdir($brochurePath, 0755, true);
             }
             
+            // Move file to brochure directory
             $brochureFile->move($brochurePath, $brochureFilename);
             $projectData['brochure'] = $brochureFilename;
         }

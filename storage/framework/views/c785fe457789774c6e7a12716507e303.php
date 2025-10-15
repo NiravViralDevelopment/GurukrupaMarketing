@@ -1,12 +1,13 @@
 
 
-<?php $__env->startSection('title', 'Create Project'); ?>
-<?php $__env->startSection('page-title', 'Create New Project'); ?>
+<?php $__env->startSection('title', 'Edit Project'); ?>
+<?php $__env->startSection('page-title', 'Edit Project'); ?>
 
 <?php $__env->startSection('content'); ?>
 <div class="container-fluid">
-    <form action="<?php echo e(route('admin.projects.store')); ?>" method="POST" enctype="multipart/form-data" id="projectForm">
+    <form action="<?php echo e(route('admin.projects.update', $project)); ?>" method="POST" enctype="multipart/form-data" id="projectForm">
     <?php echo csrf_field(); ?>
+    <?php echo method_field('PUT'); ?>
     
         <!-- Progress Bar -->
         <div class="card mb-4">
@@ -32,7 +33,7 @@
                 <div class="row">
                     <div class="col-md-8 mb-3">
                         <label for="title" class="form-label">Project Title <span class="text-danger">*</span></label>
-                <input type="text" name="title" id="title" value="<?php echo e(old('title')); ?>" required
+                <input type="text" name="title" id="title" value="<?php echo e(old('title', $project->title)); ?>" required
                             class="form-control <?php $__errorArgs = ['title'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -66,9 +67,9 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>">
                             <option value="">Select Category</option>
-                            <option value="new_launch" <?php echo e(old('category') == 'new_launch' ? 'selected' : ''); ?>>New Launch</option>
-                            <option value="ongoing" <?php echo e(old('category') == 'ongoing' ? 'selected' : ''); ?>>Ongoing</option>
-                            <option value="completed" <?php echo e(old('category') == 'completed' ? 'selected' : ''); ?>>Completed</option>
+                            <option value="new_launch" <?php echo e(old('category', $project->category) == 'new_launch' ? 'selected' : ''); ?>>New Launch</option>
+                            <option value="ongoing" <?php echo e(old('category', $project->category) == 'ongoing' ? 'selected' : ''); ?>>Ongoing</option>
+                            <option value="completed" <?php echo e(old('category', $project->category) == 'completed' ? 'selected' : ''); ?>>Completed</option>
                         </select>
                         <?php $__errorArgs = ['category'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -94,7 +95,7 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
-                        placeholder="Brief description for listings and cards"><?php echo e(old('short_description')); ?></textarea>
+                        placeholder="Brief description for listings and cards"><?php echo e(old('short_description', $project->short_description)); ?></textarea>
                     <div class="form-text">This will be shown in project cards and listings</div>
                 <?php $__errorArgs = ['short_description'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -119,7 +120,7 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
-                        placeholder="Detailed project description"><?php echo e(old('description')); ?></textarea>
+                        placeholder="Detailed project description"><?php echo e(old('description', $project->description)); ?></textarea>
                     <div class="form-text">Provide comprehensive details about the project</div>
                 <?php $__errorArgs = ['description'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -146,7 +147,7 @@ unset($__errorArgs, $__bag); ?>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="location" class="form-label">Location <span class="text-danger">*</span></label>
-                <input type="text" name="location" id="location" value="<?php echo e(old('location')); ?>" required
+                <input type="text" name="location" id="location" value="<?php echo e(old('location', $project->location)); ?>" required
                             class="form-control <?php $__errorArgs = ['location'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -170,7 +171,7 @@ unset($__errorArgs, $__bag); ?>
             
                     <div class="col-md-3 mb-3">
                         <label for="area" class="form-label">Area (sq ft)</label>
-                <input type="number" name="area" id="area" value="<?php echo e(old('area')); ?>"
+                <input type="number" name="area" id="area" value="<?php echo e(old('area', $project->area)); ?>"
                             class="form-control <?php $__errorArgs = ['area'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -194,7 +195,7 @@ unset($__errorArgs, $__bag); ?>
             
                     <div class="col-md-3 mb-3">
                         <label for="price" class="form-label">Price (₹)</label>
-                <input type="number" name="price" id="price" value="<?php echo e(old('price')); ?>"
+                <input type="number" name="price" id="price" value="<?php echo e(old('price', $project->price)); ?>"
                             class="form-control <?php $__errorArgs = ['price'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -221,7 +222,8 @@ unset($__errorArgs, $__bag); ?>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="start_date" class="form-label">Start Date</label>
-                <input type="date" name="start_date" id="start_date" value="<?php echo e(old('start_date')); ?>"
+                <input type="date" name="start_date" id="start_date" 
+                    value="<?php echo e(old('start_date', $project->start_date ? $project->start_date->format('Y-m-d') : '')); ?>"
                             class="form-control <?php $__errorArgs = ['start_date'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -244,7 +246,8 @@ unset($__errorArgs, $__bag); ?>
             
                     <div class="col-md-6 mb-3">
                         <label for="end_date" class="form-label">Expected Completion Date</label>
-                <input type="date" name="end_date" id="end_date" value="<?php echo e(old('end_date')); ?>"
+                <input type="date" name="end_date" id="end_date" 
+                    value="<?php echo e(old('end_date', $project->end_date ? $project->end_date->format('Y-m-d') : '')); ?>"
                             class="form-control <?php $__errorArgs = ['end_date'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -263,11 +266,11 @@ $message = $__bag->first($__errorArgs[0]); ?>
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
-                    </div>
             </div>
         </div>
-    </div>
-    
+            </div>
+        </div>
+
         <!-- Amenities -->
         <div class="card mb-4">
             <div class="card-header bg-info text-white">
@@ -282,7 +285,8 @@ unset($__errorArgs, $__bag); ?>
                         <div class="row">
                             <div class="col-md-6 mb-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="parking" id="parking">
+                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="parking" id="parking" 
+                                        <?php echo e(in_array('parking', old('amenities', $project->amenities ?? [])) ? 'checked' : ''); ?>>
                                     <label class="form-check-label" for="parking">
                                         <i class="fas fa-car me-1"></i>Parking
                                     </label>
@@ -290,7 +294,8 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="security" id="security">
+                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="security" id="security"
+                                        <?php echo e(in_array('security', old('amenities', $project->amenities ?? [])) ? 'checked' : ''); ?>>
                                     <label class="form-check-label" for="security">
                                         <i class="fas fa-shield-alt me-1"></i>24/7 Security
                                     </label>
@@ -298,7 +303,8 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="elevator" id="elevator">
+                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="elevator" id="elevator"
+                                        <?php echo e(in_array('elevator', old('amenities', $project->amenities ?? [])) ? 'checked' : ''); ?>>
                                     <label class="form-check-label" for="elevator">
                                         <i class="fas fa-elevator me-1"></i>Elevator
                                     </label>
@@ -306,7 +312,8 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="power_backup" id="power_backup">
+                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="power_backup" id="power_backup"
+                                        <?php echo e(in_array('power_backup', old('amenities', $project->amenities ?? [])) ? 'checked' : ''); ?>>
                                     <label class="form-check-label" for="power_backup">
                                         <i class="fas fa-bolt me-1"></i>Power Backup
                                     </label>
@@ -314,7 +321,8 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="water_supply" id="water_supply">
+                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="water_supply" id="water_supply"
+                                        <?php echo e(in_array('water_supply', old('amenities', $project->amenities ?? [])) ? 'checked' : ''); ?>>
                                     <label class="form-check-label" for="water_supply">
                                         <i class="fas fa-tint me-1"></i>24/7 Water Supply
                                     </label>
@@ -322,21 +330,23 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="garden" id="garden">
+                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="garden" id="garden"
+                                        <?php echo e(in_array('garden', old('amenities', $project->amenities ?? [])) ? 'checked' : ''); ?>>
                                     <label class="form-check-label" for="garden">
                                         <i class="fas fa-seedling me-1"></i>Garden
                                     </label>
                                 </div>
                             </div>
-        </div>
-    </div>
-    
+                        </div>
+                    </div>
+                    
                     <div class="col-md-6">
                         <h6 class="fw-bold mb-3">Luxury Amenities</h6>
                         <div class="row">
                             <div class="col-md-6 mb-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="swimming_pool" id="swimming_pool">
+                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="swimming_pool" id="swimming_pool"
+                                        <?php echo e(in_array('swimming_pool', old('amenities', $project->amenities ?? [])) ? 'checked' : ''); ?>>
                                     <label class="form-check-label" for="swimming_pool">
                                         <i class="fas fa-swimming-pool me-1"></i>Swimming Pool
                                     </label>
@@ -344,7 +354,8 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="gym" id="gym">
+                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="gym" id="gym"
+                                        <?php echo e(in_array('gym', old('amenities', $project->amenities ?? [])) ? 'checked' : ''); ?>>
                                     <label class="form-check-label" for="gym">
                                         <i class="fas fa-dumbbell me-1"></i>Gymnasium
                                     </label>
@@ -352,7 +363,8 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="clubhouse" id="clubhouse">
+                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="clubhouse" id="clubhouse"
+                                        <?php echo e(in_array('clubhouse', old('amenities', $project->amenities ?? [])) ? 'checked' : ''); ?>>
                                     <label class="form-check-label" for="clubhouse">
                                         <i class="fas fa-home me-1"></i>Clubhouse
                                     </label>
@@ -360,7 +372,8 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="playground" id="playground">
+                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="playground" id="playground"
+                                        <?php echo e(in_array('playground', old('amenities', $project->amenities ?? [])) ? 'checked' : ''); ?>>
                                     <label class="form-check-label" for="playground">
                                         <i class="fas fa-child me-1"></i>Children's Playground
                                     </label>
@@ -368,7 +381,8 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="party_hall" id="party_hall">
+                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="party_hall" id="party_hall"
+                                        <?php echo e(in_array('party_hall', old('amenities', $project->amenities ?? [])) ? 'checked' : ''); ?>>
                                     <label class="form-check-label" for="party_hall">
                                         <i class="fas fa-birthday-cake me-1"></i>Party Hall
                                     </label>
@@ -376,26 +390,40 @@ unset($__errorArgs, $__bag); ?>
                             </div>
                             <div class="col-md-6 mb-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="conference_room" id="conference_room">
+                                    <input class="form-check-input" type="checkbox" name="amenities[]" value="conference_room" id="conference_room"
+                                        <?php echo e(in_array('conference_room', old('amenities', $project->amenities ?? [])) ? 'checked' : ''); ?>>
                                     <label class="form-check-label" for="conference_room">
                                         <i class="fas fa-users me-1"></i>Conference Room
-                        </label>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    
+                
                 <!-- Custom Features -->
                 <div class="mt-4">
                     <h6 class="fw-bold mb-3">Additional Features</h6>
-        <div id="features-container">
+                    <div id="features-container">
+                        <?php if($project->features && count($project->features) > 0): ?>
+                            <?php $__currentLoopData = $project->features; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $feature): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div class="input-group mb-2">
+                                <input type="text" name="features[]" class="form-control" value="<?php echo e($feature); ?>" placeholder="Enter a custom feature">
+                                <?php if($index > 0): ?>
+                                <button type="button" class="btn btn-outline-danger" onclick="removeFeature(this)">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                                <?php endif; ?>
+                            </div>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php else: ?>
                         <div class="input-group mb-2">
                             <input type="text" name="features[]" class="form-control" placeholder="Enter a custom feature">
                             <button type="button" class="btn btn-outline-primary" onclick="addFeature()">
                                 <i class="fas fa-plus"></i> Add
-                </button>
+                            </button>
                         </div>
+                        <?php endif; ?>
                     </div>
                     <div class="form-text">Add any additional features not listed above</div>
                 </div>
@@ -413,7 +441,7 @@ unset($__errorArgs, $__bag); ?>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="map_lat" class="form-label">Latitude</label>
-                        <input type="number" name="map_lat" id="map_lat" value="<?php echo e(old('map_lat')); ?>" step="any"
+                        <input type="number" name="map_lat" id="map_lat" value="<?php echo e(old('map_lat', $project->map_lat)); ?>" step="any"
                             class="form-control <?php $__errorArgs = ['map_lat'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -433,11 +461,11 @@ $message = $__bag->first($__errorArgs[0]); ?>
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
-                    </div>
-                    
+    </div>
+    
                     <div class="col-md-6 mb-3">
                         <label for="map_lng" class="form-label">Longitude</label>
-                        <input type="number" name="map_lng" id="map_lng" value="<?php echo e(old('map_lng')); ?>" step="any"
+                        <input type="number" name="map_lng" id="map_lng" value="<?php echo e(old('map_lng', $project->map_lng)); ?>" step="any"
                             class="form-control <?php $__errorArgs = ['map_lng'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -474,9 +502,36 @@ unset($__errorArgs, $__bag); ?>
                 </h5>
             </div>
             <div class="card-body">
+        <?php if($project->images->count() > 0): ?>
+        <div class="mb-4">
+                    <h6 class="fw-bold mb-3">Current Images</h6>
+                    <div class="row">
+                <?php $__currentLoopData = $project->images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="col-md-3 mb-3">
+                            <div class="card">
+                                <img src="<?php echo e(asset($image->image_path)); ?>" class="card-img-top" style="height: 150px; object-fit: cover;" alt="<?php echo e($image->alt_text); ?>">
+                                <div class="card-body p-2">
+                    <?php if($image->is_primary): ?>
+                                    <span class="badge bg-primary mb-2">Primary</span>
+                    <?php endif; ?>
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted"><?php echo e($image->alt_text ?: 'No alt text'); ?></small>
+                    <button type="button" onclick="deleteImage(<?php echo e($image->id); ?>)" 
+                                            class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                    </button>
+                                    </div>
+                                </div>
+                            </div>
+                </div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </div>
+        </div>
+        <?php endif; ?>
+        
                 <div class="mb-3">
-                    <label for="images" class="form-label">Upload Images</label>
-                    <input type="file" name="images[]" id="images" multiple accept="image/*"
+                    <label for="images" class="form-label">Add More Images</label>
+            <input type="file" name="images[]" id="images" multiple accept="image/*"
                         class="form-control <?php $__errorArgs = ['images'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -486,13 +541,13 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>">
                     <div class="form-text">You can select multiple images at once. Recommended size: 1200x800px</div>
-                    <?php $__errorArgs = ['images'];
+            <?php $__errorArgs = ['images'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
                         <div class="invalid-feedback"><?php echo e($message); ?></div>
-                    <?php unset($message);
+            <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
@@ -501,10 +556,10 @@ unset($__errorArgs, $__bag); ?>
                 <!-- Image Preview -->
                 <div id="imagePreview" class="row mt-3" style="display: none;">
                     <div class="col-12">
-                        <h6>Selected Images:</h6>
+                        <h6>New Images Preview:</h6>
                         <div id="previewContainer" class="row"></div>
                     </div>
-            </div>
+                </div>
         </div>
     </div>
     
@@ -516,8 +571,34 @@ unset($__errorArgs, $__bag); ?>
                 </h5>
             </div>
             <div class="card-body">
+        <?php if($project->brochure): ?>
+        <div class="mb-4">
+                    <h6 class="fw-bold mb-3">Current Brochure</h6>
+                    <div class="border border-2 border-dashed rounded p-4 bg-light">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-file-pdf fa-2x text-danger me-3"></i>
+                            <div class="flex-grow-1">
+                                <p class="mb-1 fw-bold"><?php echo e($project->brochure); ?></p>
+                                <p class="text-muted mb-0">PDF Document</p>
+                            </div>
+                            <div class="ms-3">
+                                <a href="<?php echo e($project->brochure_url); ?>" target="_blank" class="btn btn-sm btn-outline-primary me-2">
+                                    <i class="fas fa-eye me-1"></i>View
+                                </a>
+                                <a href="<?php echo e($project->brochure_url); ?>" download="<?php echo e($project->brochure); ?>" class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-download me-1"></i>Download
+                                </a>
+                            </div>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+        
                 <div class="mb-3">
-                    <label for="brochure" class="form-label">Upload Brochure (PDF)</label>
+                    <label for="brochure" class="form-label">
+                <?php echo e($project->brochure ? 'Replace Brochure (PDF)' : 'Upload Brochure (PDF)'); ?>
+
+            </label>
                     <div class="border border-2 border-dashed rounded p-4 text-center" id="brochureDropZone">
                         <i class="fas fa-file-pdf fa-3x text-muted mb-3"></i>
                         <p class="mb-2">Drag and drop your PDF file here, or</p>
@@ -526,21 +607,21 @@ unset($__errorArgs, $__bag); ?>
                             <i class="fas fa-upload me-1"></i>Choose File
                         </button>
                         <p class="text-muted mt-2 mb-0">PDF files up to 10MB</p>
-                    </div>
-                    <?php $__errorArgs = ['brochure'];
+            </div>
+            <?php $__errorArgs = ['brochure'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
                         <div class="invalid-feedback d-block"><?php echo e($message); ?></div>
-                    <?php unset($message);
+            <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
-                </div>
-            </div>
         </div>
-        
+        </div>
+    </div>
+    
         <!-- SEO Settings -->
         <div class="card mb-4">
             <div class="card-header bg-purple text-white">
@@ -551,7 +632,7 @@ unset($__errorArgs, $__bag); ?>
             <div class="card-body">
                 <div class="mb-3">
                     <label for="meta_title" class="form-label">Meta Title</label>
-                <input type="text" name="meta_title" id="meta_title" value="<?php echo e(old('meta_title')); ?>"
+                <input type="text" name="meta_title" id="meta_title" value="<?php echo e(old('meta_title', $project->meta_title)); ?>"
                         class="form-control <?php $__errorArgs = ['meta_title'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -585,7 +666,7 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
-                        placeholder="SEO description for search engines" maxlength="160"><?php echo e(old('meta_description')); ?></textarea>
+                        placeholder="SEO description for search engines" maxlength="160"><?php echo e(old('meta_description', $project->meta_description)); ?></textarea>
                     <div class="form-text">Recommended: 150-160 characters</div>
                 <?php $__errorArgs = ['meta_description'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -612,7 +693,8 @@ unset($__errorArgs, $__bag); ?>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-check form-switch mb-3">
-                            <input class="form-check-input" type="checkbox" name="is_featured" id="is_featured" value="1" <?php echo e(old('is_featured') ? 'checked' : ''); ?>>
+                            <input class="form-check-input" type="checkbox" name="is_featured" id="is_featured" value="1" 
+                                <?php echo e(old('is_featured', $project->is_featured) ? 'checked' : ''); ?>>
                             <label class="form-check-label" for="is_featured">
                                 <i class="fas fa-star me-1"></i>Featured Project
                 </label>
@@ -622,7 +704,8 @@ unset($__errorArgs, $__bag); ?>
             
                     <div class="col-md-6">
                         <div class="form-check form-switch mb-3">
-                            <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" <?php echo e(old('is_active', true) ? 'checked' : ''); ?>>
+                            <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" 
+                                <?php echo e(old('is_active', $project->is_active) ? 'checked' : ''); ?>>
                             <label class="form-check-label" for="is_active">
                                 <i class="fas fa-eye me-1"></i>Active Project
                 </label>
@@ -637,15 +720,15 @@ unset($__errorArgs, $__bag); ?>
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
-                    <a href="<?php echo e(route('admin.projects.index')); ?>" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-1"></i>Back to Projects
+                    <a href="<?php echo e(route('admin.projects.show', $project)); ?>" class="btn btn-outline-secondary">
+                        <i class="fas fa-eye me-1"></i>View Project
                     </a>
                     <div>
-                        <button type="button" class="btn btn-outline-primary me-2" onclick="saveDraft()">
-                            <i class="fas fa-save me-1"></i>Save Draft
-                        </button>
+                        <a href="<?php echo e(route('admin.projects.index')); ?>" class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Projects
+                        </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-plus me-1"></i>Create Project
+                            <i class="fas fa-save me-1"></i>Update Project
         </button>
                     </div>
                 </div>
@@ -734,36 +817,34 @@ document.getElementById('images').addEventListener('change', function(e) {
 });
 
 // Brochure drop zone functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const brochureDropZone = document.getElementById('brochureDropZone');
-    const brochureInput = document.getElementById('brochure');
+const brochureDropZone = document.getElementById('brochureDropZone');
+const brochureInput = document.getElementById('brochure');
 
-    brochureDropZone.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.classList.add('border-primary', 'bg-light');
-    });
+brochureDropZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    this.classList.add('border-primary', 'bg-light');
+});
 
-    brochureDropZone.addEventListener('dragleave', function(e) {
-        e.preventDefault();
-        this.classList.remove('border-primary', 'bg-light');
-    });
+brochureDropZone.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    this.classList.remove('border-primary', 'bg-light');
+});
 
-    brochureDropZone.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.classList.remove('border-primary', 'bg-light');
-        
-        const files = e.dataTransfer.files;
-        if (files.length > 0 && files[0].type === 'application/pdf') {
-            brochureInput.files = files;
-            updateBrochurePreview(files[0]);
-        }
-    });
+brochureDropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    this.classList.remove('border-primary', 'bg-light');
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0 && files[0].type === 'application/pdf') {
+        brochureInput.files = files;
+        updateBrochurePreview(files[0]);
+    }
+});
 
-    brochureInput.addEventListener('change', function(e) {
-        if (e.target.files.length > 0) {
-            updateBrochurePreview(e.target.files[0]);
-        }
-    });
+brochureInput.addEventListener('change', function(e) {
+    if (e.target.files.length > 0) {
+        updateBrochurePreview(e.target.files[0]);
+    }
 });
 
 function updateBrochurePreview(file) {
@@ -775,47 +856,43 @@ function updateBrochurePreview(file) {
         <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="removeBrochure()">
             <i class="fas fa-trash me-1"></i>Remove
         </button>
-        <input type="file" name="brochure" id="brochure" accept=".pdf" class="d-none">
     `;
-    
-    // Re-attach the file to the new input
-    const newInput = document.getElementById('brochure');
-    const dataTransfer = new DataTransfer();
-    dataTransfer.items.add(file);
-    newInput.files = dataTransfer.files;
 }
 
 function removeBrochure() {
+    document.getElementById('brochure').value = '';
     document.getElementById('brochureDropZone').innerHTML = `
         <i class="fas fa-file-pdf fa-3x text-muted mb-3"></i>
         <p class="mb-2">Drag and drop your PDF file here, or</p>
-        <input type="file" name="brochure" id="brochure" accept=".pdf" class="d-none">
         <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('brochure').click()">
             <i class="fas fa-upload me-1"></i>Choose File
         </button>
         <p class="text-muted mt-2 mb-0">PDF files up to 10MB</p>
     `;
-    
-    // Re-attach event listeners to the new input
-    const newInput = document.getElementById('brochure');
-    newInput.addEventListener('change', function(e) {
-        if (e.target.files.length > 0) {
-            updateBrochurePreview(e.target.files[0]);
-        }
-    });
 }
 
-// Save draft functionality
-function saveDraft() {
-    // Add a hidden input to indicate this is a draft
-    const draftInput = document.createElement('input');
-    draftInput.type = 'hidden';
-    draftInput.name = 'is_draft';
-    draftInput.value = '1';
-    document.getElementById('projectForm').appendChild(draftInput);
-    
-    // Submit the form
-    document.getElementById('projectForm').submit();
+// Delete image functionality
+function deleteImage(imageId) {
+    if (confirm('Are you sure you want to delete this image?')) {
+        fetch(`/admin/project-images/${imageId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Error deleting image');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting image');
+        });
+    }
 }
 
 // Form validation
@@ -912,4 +989,5 @@ document.getElementById('short_description').addEventListener('input', function(
 </style>
 <?php $__env->stopPush(); ?>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH E:\Working\GurukrupaMarketing\resources\views/admin/projects/create.blade.php ENDPATH**/ ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH E:\Working\GurukrupaMarketing\resources\views/admin/projects/edit.blade.php ENDPATH**/ ?>

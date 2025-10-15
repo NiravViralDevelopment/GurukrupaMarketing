@@ -4,11 +4,12 @@ use App\Http\Controllers\Frontend\AboutController;
 use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\ContactController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\InquiryController;
 use App\Http\Controllers\Frontend\ProjectController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\InquiryController;
+use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\SettingController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,10 @@ Route::get('/blogs/{blog}', [BlogController::class, 'show'])->name('blogs.show')
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
+// Brochure download routes
+Route::post('/brochure/download', [InquiryController::class, 'downloadBrochure'])->name('brochure.request');
+Route::get('/brochure/{project}/download', [InquiryController::class, 'downloadBrochureFile'])->name('brochure.download');
+
 // Test route to verify dynamic project functionality
 Route::get('/test-project', function() {
     $project = \App\Models\Project::with('images')->first();
@@ -36,6 +41,32 @@ Route::get('/test-project', function() {
     }
     return response()->json(['message' => 'No projects found']);
 })->name('test.project');
+
+// Test route to debug brochure upload
+Route::post('/test-brochure-upload', function(\Illuminate\Http\Request $request) {
+    \Log::info('Test brochure upload', [
+        'has_file' => $request->hasFile('brochure'),
+        'file' => $request->file('brochure'),
+        'all_files' => $request->allFiles(),
+        'all_data' => $request->all()
+    ]);
+    
+    if ($request->hasFile('brochure')) {
+        $file = $request->file('brochure');
+        return response()->json([
+            'success' => true,
+            'file_name' => $file->getClientOriginalName(),
+            'file_size' => $file->getSize(),
+            'mime_type' => $file->getMimeType(),
+            'is_valid' => $file->isValid()
+        ]);
+    }
+    
+    return response()->json([
+        'success' => false,
+        'message' => 'No brochure file received'
+    ]);
+});
 
 // Admin Routes
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
@@ -70,13 +101,13 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::delete('banners/{banner}', [BannerController::class, 'destroy'])->name('admin.banners.destroy');
     
     // Inquiries
-    Route::get('inquiries', [InquiryController::class, 'index'])->name('admin.inquiries.index');
-    Route::get('inquiries/{inquiry}', [InquiryController::class, 'show'])->name('admin.inquiries.show');
-    Route::patch('inquiries/{inquiry}/mark-read', [InquiryController::class, 'markAsRead'])->name('admin.inquiries.mark-read');
-    Route::patch('inquiries/{inquiry}/mark-replied', [InquiryController::class, 'markAsReplied'])->name('admin.inquiries.mark-replied');
-    Route::patch('inquiries/{inquiry}/mark-closed', [InquiryController::class, 'markAsClosed'])->name('admin.inquiries.mark-closed');
-    Route::delete('inquiries/{inquiry}', [InquiryController::class, 'destroy'])->name('admin.inquiries.destroy');
-    Route::get('inquiries-filter', [InquiryController::class, 'filter'])->name('admin.inquiries.filter');
+    Route::get('inquiries', [AdminInquiryController::class, 'index'])->name('admin.inquiries.index');
+    Route::get('inquiries/{inquiry}', [AdminInquiryController::class, 'show'])->name('admin.inquiries.show');
+    Route::patch('inquiries/{inquiry}/mark-read', [AdminInquiryController::class, 'markAsRead'])->name('admin.inquiries.mark-read');
+    Route::patch('inquiries/{inquiry}/mark-replied', [AdminInquiryController::class, 'markAsReplied'])->name('admin.inquiries.mark-replied');
+    Route::patch('inquiries/{inquiry}/mark-closed', [AdminInquiryController::class, 'markAsClosed'])->name('admin.inquiries.mark-closed');
+    Route::delete('inquiries/{inquiry}', [AdminInquiryController::class, 'destroy'])->name('admin.inquiries.destroy');
+    Route::get('inquiries-filter', [AdminInquiryController::class, 'filter'])->name('admin.inquiries.filter');
     
     // Settings
     Route::get('settings', [SettingController::class, 'index'])->name('admin.settings.index');

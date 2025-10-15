@@ -145,10 +145,17 @@
                         @endif
                     </div>
                     
-                    <div class="mt-8">
+                    <div class="mt-8 space-y-4">
                         <a href="{{ route('contact') }}?project={{ $project->id }}" class="w-full bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-yellow-600 transition duration-300 text-center block">
                             Get Quote
                         </a>
+                        
+                        <button onclick="openBrochureModal()" class="w-full bg-gray-800 text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-700 transition duration-300 text-center flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Download Brochure
+                        </button>
                     </div>
                 </div>
             </div>
@@ -196,8 +203,82 @@
     </div>
 </div>
 
+<!-- Brochure Download Modal -->
+<div id="brochureModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full mx-4 relative">
+        <button onclick="closeBrochureModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        
+        <div class="p-8">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Download Brochure</h3>
+                <p class="text-gray-600">Please provide your details to download the project brochure</p>
+            </div>
+            
+            <form id="brochureForm" class="space-y-4">
+                @csrf
+                <input type="hidden" name="project_id" value="{{ $project->id }}">
+                
+                <div>
+                    <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
+                    <input type="text" id="name" name="name" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition duration-300"
+                           placeholder="Enter your full name">
+                </div>
+                
+                <div>
+                    <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email Address *</label>
+                    <input type="email" id="email" name="email" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition duration-300"
+                           placeholder="Enter your email address">
+                </div>
+                
+                <div>
+                    <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition duration-300"
+                           placeholder="Enter your phone number">
+                </div>
+                
+                <div class="pt-4">
+                    <button type="submit" id="submitBtn" 
+                            class="w-full bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-yellow-600 transition duration-300 flex items-center justify-center">
+                        <span id="submitText">Download Brochure</span>
+                        <svg id="loadingSpinner" class="hidden w-5 h-5 ml-2 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+            
+            <div id="successMessage" class="hidden text-center mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <h4 class="text-lg font-semibold text-green-800 mb-2">Thank You!</h4>
+                <p class="text-green-700 mb-4">Your details have been recorded. The brochure will download automatically.</p>
+                <button onclick="closeBrochureModal()" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-300">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script>
+// Image Modal Functions
 function openImageModal(imageSrc, imageAlt) {
     document.getElementById('modalImage').src = imageSrc;
     document.getElementById('modalCaption').textContent = imageAlt;
@@ -210,18 +291,98 @@ function closeImageModal() {
     document.body.style.overflow = 'auto';
 }
 
-// Close modal when clicking outside the image
+// Brochure Modal Functions
+function openBrochureModal() {
+    document.getElementById('brochureModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    // Reset form
+    document.getElementById('brochureForm').reset();
+    document.getElementById('successMessage').classList.add('hidden');
+    document.getElementById('brochureForm').classList.remove('hidden');
+}
+
+function closeBrochureModal() {
+    document.getElementById('brochureModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+// Close modals when clicking outside
 document.getElementById('imageModal').addEventListener('click', function(e) {
     if (e.target === this) {
         closeImageModal();
     }
 });
 
-// Close modal with Escape key
+document.getElementById('brochureModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeBrochureModal();
+    }
+});
+
+// Close modals with Escape key
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeImageModal();
+        closeBrochureModal();
     }
+});
+
+// Brochure form submission
+document.getElementById('brochureForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const form = this;
+    
+    // Show loading state
+    submitBtn.disabled = true;
+    submitText.textContent = 'Processing...';
+    loadingSpinner.classList.remove('hidden');
+    
+    // Get form data
+    const formData = new FormData(form);
+    
+    // Submit form via AJAX
+    fetch('{{ route("brochure.request") }}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Show success message
+            document.getElementById('brochureForm').classList.add('hidden');
+            document.getElementById('successMessage').classList.remove('hidden');
+            
+            // Download brochure if available
+            if (data.download_url) {
+                window.open(data.download_url, '_blank');
+            }
+        } else {
+            // Show error message
+            alert(data.message || 'An error occurred. Please try again.');
+            
+            // Reset button state
+            submitBtn.disabled = false;
+            submitText.textContent = 'Download Brochure';
+            loadingSpinner.classList.add('hidden');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+        
+        // Reset button state
+        submitBtn.disabled = false;
+        submitText.textContent = 'Download Brochure';
+        loadingSpinner.classList.add('hidden');
+    });
 });
 </script>
 @endpush

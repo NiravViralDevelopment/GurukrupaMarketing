@@ -531,34 +531,36 @@ document.getElementById('images').addEventListener('change', function(e) {
 });
 
 // Brochure drop zone functionality
-const brochureDropZone = document.getElementById('brochureDropZone');
-const brochureInput = document.getElementById('brochure');
+document.addEventListener('DOMContentLoaded', function() {
+    const brochureDropZone = document.getElementById('brochureDropZone');
+    const brochureInput = document.getElementById('brochure');
 
-brochureDropZone.addEventListener('dragover', function(e) {
-    e.preventDefault();
-    this.classList.add('border-primary', 'bg-light');
-});
+    brochureDropZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.classList.add('border-primary', 'bg-light');
+    });
 
-brochureDropZone.addEventListener('dragleave', function(e) {
-    e.preventDefault();
-    this.classList.remove('border-primary', 'bg-light');
-});
+    brochureDropZone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        this.classList.remove('border-primary', 'bg-light');
+    });
 
-brochureDropZone.addEventListener('drop', function(e) {
-    e.preventDefault();
-    this.classList.remove('border-primary', 'bg-light');
-    
-    const files = e.dataTransfer.files;
-    if (files.length > 0 && files[0].type === 'application/pdf') {
-        brochureInput.files = files;
-        updateBrochurePreview(files[0]);
-    }
-});
+    brochureDropZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.classList.remove('border-primary', 'bg-light');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0 && files[0].type === 'application/pdf') {
+            brochureInput.files = files;
+            updateBrochurePreview(files[0]);
+        }
+    });
 
-brochureInput.addEventListener('change', function(e) {
-    if (e.target.files.length > 0) {
-        updateBrochurePreview(e.target.files[0]);
-    }
+    brochureInput.addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            updateBrochurePreview(e.target.files[0]);
+        }
+    });
 });
 
 function updateBrochurePreview(file) {
@@ -570,19 +572,34 @@ function updateBrochurePreview(file) {
         <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="removeBrochure()">
             <i class="fas fa-trash me-1"></i>Remove
         </button>
+        <input type="file" name="brochure" id="brochure" accept=".pdf" class="d-none">
     `;
+    
+    // Re-attach the file to the new input
+    const newInput = document.getElementById('brochure');
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(file);
+    newInput.files = dataTransfer.files;
 }
 
 function removeBrochure() {
-    document.getElementById('brochure').value = '';
     document.getElementById('brochureDropZone').innerHTML = `
         <i class="fas fa-file-pdf fa-3x text-muted mb-3"></i>
         <p class="mb-2">Drag and drop your PDF file here, or</p>
+        <input type="file" name="brochure" id="brochure" accept=".pdf" class="d-none">
         <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('brochure').click()">
             <i class="fas fa-upload me-1"></i>Choose File
         </button>
         <p class="text-muted mt-2 mb-0">PDF files up to 10MB</p>
     `;
+    
+    // Re-attach event listeners to the new input
+    const newInput = document.getElementById('brochure');
+    newInput.addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            updateBrochurePreview(e.target.files[0]);
+        }
+    });
 }
 
 // Save draft functionality
